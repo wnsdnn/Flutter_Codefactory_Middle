@@ -1,5 +1,6 @@
 import 'package:actual/common/const/colors.dart';
 import 'package:actual/common/layout/default_layout.dart';
+import 'package:actual/restaurant/view/restaurant_screen.dart';
 import 'package:flutter/material.dart';
 
 final TABS = [
@@ -56,11 +57,7 @@ class _RootTabState extends State<RootTab> with TickerProviderStateMixin {
           controller: tabController,
           children: TABS
               .map(
-                (e) => Container(
-                  child: Center(
-                    child: Text(e.label),
-                  ),
-                ),
+                (e) => RestaurantScrenn(),
               )
               .toList(),
         ),
