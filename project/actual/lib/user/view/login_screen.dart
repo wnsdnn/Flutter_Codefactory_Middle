@@ -4,11 +4,20 @@ import 'dart:io';
 import 'package:actual/common/component/custom_text_form_field.dart';
 import 'package:actual/common/const/colors.dart';
 import 'package:actual/common/layout/default_layout.dart';
+import 'package:actual/common/view/root_tab.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String username = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -52,19 +61,30 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 12.0),
                 CustomTextFormField(
                   hintText: '이메일을 입력해주세요.',
-                  onChanged: (String value) {},
+                  onChanged: (String value) {
+                    setState(() {
+                      this.username = value;
+                    });
+                  },
                 ),
                 SizedBox(height: 16.0),
                 CustomTextFormField(
                   hintText: '비밀번호를 입력해주세요.',
                   obscureText: true,
-                  onChanged: (String value) {},
+                  onChanged: (String value) {
+                    setState(() {
+                      this.password = value;
+                    });
+                  },
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
                     // id:pwd
-                    final rawString = 'test@codefactory.ai:testtest';
+                    // final rawString = 'test@codefactory.ai:testtest';
+                    final rawString = '$username:$password';
+
+                    print(rawString);
 
                     // Codec<매개변수 타입, 리턴타입>
                     // Base64 형태로 바뀌는 코드
@@ -75,13 +95,18 @@ class LoginScreen extends StatelessWidget {
                     final response = await dio.post(
                       'http://$ip/auth/login',
                       options: Options(
-                          headers: {
-                            'authorization': 'Basic $token',
-                          },
+                        headers: {
+                          'authorization': 'Basic $token',
+                        },
                       ),
                     );
 
-                    print(response.data);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RootTab(),
+                      ),
+                    );
+                    // print(response.data);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
@@ -96,7 +121,8 @@ class LoginScreen extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNDk0ODcwMiwiZXhwIjoxNzA1MDM1MTAyfQ.dHpIiv-YekzyIpLgdFtCEKYrdyV36Lsqg2zQkrC36O0';
+                    final refreshToken =
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNDk0ODcwMiwiZXhwIjoxNzA1MDM1MTAyfQ.dHpIiv-YekzyIpLgdFtCEKYrdyV36Lsqg2zQkrC36O0';
 
                     final response = await dio.post(
                       'http://$ip/auth/token',
