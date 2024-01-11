@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:actual/common/component/custom_text_form_field.dart';
 import 'package:actual/common/const/colors.dart';
 import 'package:actual/common/layout/default_layout.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,6 +12,15 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dio = Dio();
+
+    // localhost
+    // final emulatorIp = '127.0.0.1:3000';
+    final emulatorIp = '192.168.0.127:3000';
+    final simulatorIp = '10.0.2.2:3000';
+
+    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
+
     final logoWidth = (MediaQuery.of(context).size.width / 3) * 2;
 
     return DefaultLayout(
@@ -49,7 +62,27 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    // id:pwd
+                    final rawString = 'test@codefactory.ai:testtest';
+
+                    // Codec<매개변수 타입, 리턴타입>
+                    // Base64 형태로 바뀌는 코드
+                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                    String token = stringToBase64.encode(rawString);
+                    print(token);
+
+                    final response = await dio.post(
+                      'http://$ip/auth/login',
+                      options: Options(
+                          headers: {
+                            'authorization': 'Basic $token',
+                          },
+                      ),
+                    );
+
+                    print(response.data);
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
                     shape: RoundedRectangleBorder(
@@ -62,7 +95,20 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNDk0ODcwMiwiZXhwIjoxNzA1MDM1MTAyfQ.dHpIiv-YekzyIpLgdFtCEKYrdyV36Lsqg2zQkrC36O0';
+
+                    final response = await dio.post(
+                      'http://$ip/auth/token',
+                      options: Options(
+                        headers: {
+                          'authorization': 'Bearer $refreshToken',
+                        },
+                      ),
+                    );
+
+                    print(response.data);
+                  },
                   style: TextButton.styleFrom(
                     primary: Colors.black,
                     shape: RoundedRectangleBorder(
