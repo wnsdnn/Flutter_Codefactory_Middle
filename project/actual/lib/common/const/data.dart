@@ -9,7 +9,9 @@ const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN';
 // 회사 ip
 // final emulatorIp = '192.168.0.127:3000';
 // 배화여대 ip
-final emulatorIp = '172.16.111.101:3000';
+// final emulatorIp = '172.16.111.101:3000';
+// 집 ip
+final emulatorIp = '192.168.0.2:3000';
 final simulatorIp = '10.0.2.2:3000';
 
 final ip = Platform.isIOS ? simulatorIp : emulatorIp;
