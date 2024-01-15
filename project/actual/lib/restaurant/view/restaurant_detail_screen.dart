@@ -30,8 +30,6 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(id);
-
     return DefaultLayout(
       title: '불타는 떡볶이',
       child: FutureBuilder<Map<String, dynamic>>(
@@ -59,7 +57,9 @@ class RestaurantDetailScreen extends StatelessWidget {
                   model: item,
                 ),
                 renderLabel(),
-                renderProducts(),
+                renderProducts(
+                  products: item.products,
+                ),
               ],
             );
           }),
@@ -68,7 +68,7 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   SliverToBoxAdapter renderTop({
     required RestaurantDetailModel model,
-}) {
+  }) {
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(
         model: model,
@@ -77,16 +77,22 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  SliverPadding renderProducts() {
+  SliverPadding renderProducts({
+    required List<RestaurantProductModel> products,
+  }) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-          childCount: 10,
+          childCount: products.length,
           (context, index) {
+            final model = products[index];
+
             return Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: ProductCard(),
+              child: ProductCard.fromModel(
+                model: model,
+              ),
             );
           },
         ),
