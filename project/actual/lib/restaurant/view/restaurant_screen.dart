@@ -52,7 +52,7 @@ class RestaurantScrenn extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = response[index]!;
                   // parsed item
-                  final pItem = RestaurantModel.fromJson(json: item);
+                  final pItem = RestaurantModel.fromJson(item);
 
                   return GestureDetector(
                     onTap: () {
