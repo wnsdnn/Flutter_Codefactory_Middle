@@ -18,7 +18,7 @@ abstract class RestaurantRepository {
   @GET('/{id}')
   // 임시로 넣은 토큰값
   @Headers({
-    'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA1MzI5MjEzLCJleHAiOjE3MDUzMjk1MTN9.TH3rNAqT9__EaeK7ArpZV0B5pHWSc3QMnEC0NBokotY'
+    'accessToken': 'true',
   })
   Future<RestaurantDetailModel> getRestaurantDetail({
     @Path() required String id,

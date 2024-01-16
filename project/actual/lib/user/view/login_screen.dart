@@ -97,10 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     final refreshToken = response.data['refreshToken'];
                     final accessToken = response.data['accessToken'];
 
-
                     storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
                     storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
-
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -120,9 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-
-                  },
+                  onPressed: () async {},
                   style: TextButton.styleFrom(
                     primary: Colors.black,
                     shape: RoundedRectangleBorder(

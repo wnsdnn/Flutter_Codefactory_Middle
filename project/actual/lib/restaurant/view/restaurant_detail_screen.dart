@@ -1,4 +1,5 @@
 import 'package:actual/common/const/data.dart';
+import 'package:actual/common/dio/dio.dart';
 import 'package:actual/common/layout/default_layout.dart';
 import 'package:actual/product/component/product_card.dart';
 import 'package:actual/restaurant/component/restaurant_card.dart';
@@ -17,13 +18,18 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   Future<RestaurantDetailModel> getRestaurantDetail() async {
     final dio = Dio();
-    
-    final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/');
+
+    dio.interceptors.add(
+      CustomInterceptor(
+        storage: storage,
+      ),
+    );
+
+    final repository =
+        RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/');
 
     return repository.getRestaurantDetail(id: id);
-    
-    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    //
+
     // final response = await dio.get(
     //   'http://$ip/restaurant/$id',
     //   options: Options(headers: {
@@ -39,35 +45,38 @@ class RestaurantDetailScreen extends StatelessWidget {
     return DefaultLayout(
       title: '불타는 떡볶이',
       child: FutureBuilder<RestaurantDetailModel>(
-          future: getRestaurantDetail(),
-          builder: (context, AsyncSnapshot<RestaurantDetailModel> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
-              );
-            }
-
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            // final item = RestaurantDetailModel.fromJson(snapshot.data!);
-            final item = snapshot.data!;
-
-            return CustomScrollView(
-              slivers: [
-                renderTop(
-                  model: item,
-                ),
-                renderLabel(),
-                renderProducts(
-                  products: item.products,
-                ),
-              ],
+        future: getRestaurantDetail(),
+        builder: (context, AsyncSnapshot<RestaurantDetailModel> snapshot) {
+          if (snapshot.hasError) {
+            print('==== error ====');
+            print(snapshot.error);
+            return Center(
+              child: Text(snapshot.error.toString()),
             );
-          }),
+          }
+
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          // final item = RestaurantDetailModel.fromJson(snapshot.data!);
+          final item = snapshot.data!;
+
+          return CustomScrollView(
+            slivers: [
+              renderTop(
+                model: item,
+              ),
+              renderLabel(),
+              renderProducts(
+                products: item.products,
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
