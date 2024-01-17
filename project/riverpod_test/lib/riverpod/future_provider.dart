@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final multiplesFutureProvider = FutureProvider<List<int>>((ref) async {
+final multipleFutureProvider = FutureProvider<List<int>>((ref) async {
   await Future.delayed(Duration(seconds: 2));
 
   throw Exception('에러입니다.');
