@@ -1,10 +1,9 @@
-import 'package:actual/restaurant/model/restaurant_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'cursor_pagination_model.g.dart';
 
 @JsonSerializable(
-  // 재너릭을 사용할려면 이 속성을 true로 해줘야한다.
+  // 재너릭을 고려한 코드를 생성할수 있게 허용
   genericArgumentFactories: true,
 )
 class CursorPagination<T> {
@@ -16,7 +15,8 @@ class CursorPagination<T> {
     required this.data,
   });
 
-  factory CursorPagination.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+  factory CursorPagination.fromJson(
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$CursorPaginationFromJson(json, fromJsonT);
 }
 
