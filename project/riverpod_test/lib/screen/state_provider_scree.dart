@@ -24,7 +24,13 @@ class StateProviderScreen extends ConsumerWidget {
               onPressed: () {
                 ref.read(numberProvider.notifier).update((state) => state + 1);
               },
-              child: Text('up'),
+              child: Text('UP'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(numberProvider.notifier).state = ref.read(numberProvider.notifier).state - 1;
+              },
+              child: Text('DOWN'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -64,7 +70,7 @@ class _NextScreen extends ConsumerWidget {
               onPressed: () {
                 ref.read(numberProvider.notifier).update((state) => state + 1);
               },
-              child: Text('up'),
+              child: Text('UP'),
             ),
           ],
         ),
