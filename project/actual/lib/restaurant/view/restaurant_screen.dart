@@ -2,6 +2,7 @@ import 'package:actual/common/const/data.dart';
 import 'package:actual/common/dio/dio.dart';
 import 'package:actual/restaurant/component/restaurant_card.dart';
 import 'package:actual/restaurant/model/restaurant_model.dart';
+import 'package:actual/restaurant/repository/restaurant_repository.dart';
 import 'package:actual/restaurant/view/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,23 +10,26 @@ import 'package:flutter/material.dart';
 class RestaurantScrenn extends StatelessWidget {
   const RestaurantScrenn({super.key});
 
-  Future<List> paginateRestaurant() async {
+  Future<List<RestaurantModel>> paginateRestaurant() async {
     final dio = Dio();
 
     dio.interceptors.add(
       CustomInterceptor(storage: storage),
     );
 
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    final response =
+        await RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/').paginate();
 
-    final response = await dio.get(
-      'http://$ip/restaurant',
-      options: Options(headers: {
-        'authorization': 'Bearer $accessToken',
-      }),
-    );
+    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    //
+    // final response = await dio.get(
+    //   'http://$ip/restaurant',
+    //   options: Options(headers: {
+    //     'authorization': 'Bearer $accessToken',
+    //   }),
+    // );
 
-    return response.data['data'];
+    return response.data;
   }
 
   @override
@@ -36,7 +40,7 @@ class RestaurantScrenn extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: 16.0,
           ),
-          child: FutureBuilder<List>(
+          child: FutureBuilder<List<RestaurantModel>>(
             future: paginateRestaurant(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -55,9 +59,9 @@ class RestaurantScrenn extends StatelessWidget {
 
               return ListView.separated(
                 itemBuilder: (context, index) {
-                  final item = response[index]!;
+                  final pItem = response[index]!;
                   // parsed item
-                  final pItem = RestaurantModel.fromJson(item);
+                  // final pItem = RestaurantModel.fromJson(item);
 
                   return GestureDetector(
                     onTap: () {
