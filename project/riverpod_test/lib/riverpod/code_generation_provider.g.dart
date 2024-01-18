@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String $gStateHash() => r'1930eb18cb7d9599f0077763861ab6b91f206099';
+String $gStateHash() => r'7ccdacb016fab2894413745b936f82987f9f72cf';
 
 /// See also [gState].
 final gStateProvider = AutoDisposeProvider<String>(
@@ -39,3 +39,23 @@ final gStateProvider = AutoDisposeProvider<String>(
       const bool.fromEnvironment('dart.vm.product') ? null : $gStateHash,
 );
 typedef GStateRef = AutoDisposeProviderRef<String>;
+String $gStateFutureHash() => r'6fdc12fc073cddf0fffbed76825d7e1e2b83a577';
+
+/// See also [gStateFuture].
+final gStateFutureProvider = AutoDisposeFutureProvider<int>(
+  gStateFuture,
+  name: r'gStateFutureProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : $gStateFutureHash,
+);
+typedef GStateFutureRef = AutoDisposeFutureProviderRef<int>;
+String $gStateFuture2Hash() => r'7e87666430f62746072d9bc5073c3a11f60ad45c';
+
+/// See also [gStateFuture2].
+final gStateFuture2Provider = FutureProvider<int>(
+  gStateFuture2,
+  name: r'gStateFuture2Provider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : $gStateFuture2Hash,
+);
+typedef GStateFuture2Ref = FutureProviderRef<int>;
