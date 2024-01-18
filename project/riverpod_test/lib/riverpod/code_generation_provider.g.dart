@@ -29,6 +29,23 @@ class _SystemHash {
   }
 }
 
+String $GStateNotifierHash() => r'f5d3562260bad49518ffe5b82e60b7cc1b8655f2';
+
+/// See also [GStateNotifier].
+final gStateNotifierProvider = AutoDisposeNotifierProvider<GStateNotifier, int>(
+  GStateNotifier.new,
+  name: r'gStateNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : $GStateNotifierHash,
+);
+typedef GStateNotifierRef = AutoDisposeNotifierProviderRef<int>;
+
+abstract class _$GStateNotifier extends AutoDisposeNotifier<int> {
+  @override
+  int build();
+}
+
 String $gStateHash() => r'7ccdacb016fab2894413745b936f82987f9f72cf';
 
 /// See also [gState].
@@ -59,7 +76,7 @@ final gStateFuture2Provider = FutureProvider<int>(
       const bool.fromEnvironment('dart.vm.product') ? null : $gStateFuture2Hash,
 );
 typedef GStateFuture2Ref = FutureProviderRef<int>;
-String $gStateMultiplyHash() => r'ca139021a47d88c004bf16ca319789acdc760043';
+String $gStateMultiplyHash() => r'ec5a8efb6ba3e90e29f7a0722867976890c2a634';
 
 /// See also [gStateMultiply].
 class GStateMultiplyProvider extends AutoDisposeProvider<int> {
