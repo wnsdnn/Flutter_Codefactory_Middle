@@ -23,7 +23,6 @@ Future<int> gStateFuture(GStateFutureRef ref) async {
   return 10;
 }
 
-
 @Riverpod(
   // 살려둬라 (기본이 false)
   // false - FutureProvider
@@ -36,9 +35,30 @@ Future<int> gStateFuture2(GStateFuture2Ref ref) async {
   return 10;
 }
 
-
-
 // 2) Parameter > Family
 // 파라미터를 일반 함수처럼 사용할 수 있도록 (2개 이상)
 
+// 기존 Family 쓰는 방법 (파라미터 2개 이상 받고 싶을때)
+class Parameter {
+  final int number1;
+  final int number2;
 
+  Parameter({
+    required this.number1,
+    required this.number2,
+  });
+}
+
+final _testFamilyProvider = Provider.family<int, Parameter>(
+  (ref, parameter) => parameter.number1 * parameter.number2,
+);
+
+// v2로 넘어왔을때 사용방법
+@riverpod
+int gStateMultiply(
+  GStateMultiplyRef ref, {
+  required int number1,
+  required int number2,
+}) {
+  return number1 * number2;
+}
