@@ -8,6 +8,8 @@ class CodeGenerationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('build');
+
     final state1 = ref.watch(gStateProvider);
     final state2 = ref.watch(gStateFutureProvider);
     final state3 = ref.watch(gStateFuture2Provider);
@@ -15,7 +17,6 @@ class CodeGenerationScreen extends ConsumerWidget {
       number1: 10,
       number2: 20,
     ));
-    final state5 = ref.watch(gStateNotifierProvider);
 
     return DefaultLayout(
       title: 'CodeGenerationScreen',
@@ -40,8 +41,23 @@ class CodeGenerationScreen extends ConsumerWidget {
             Text(
               'State4: $state4',
             ),
-            Text(
-              'State5: $state5',
+            // state5의 값이 바껴도 Consumer 위젯만 다시 빌드됨
+            Consumer(
+              // Consumer 위젯의 child 속성의 값이 child 파라미터로 들어옴
+              builder: (context, ref, child) {
+                print('builder build');
+                final state5 = ref.watch(gStateNotifierProvider);
+
+                return Row(
+                  children: [
+                    Text('State5: $state5'),
+                    if (child != null) child,
+                  ],
+                );
+              },
+              // build가 다시 실행되도 변경사항이 딱히 필요가 없는 위젯들을 child에 넣어둠
+              // build 함수가 다시 시작되도 child의 값은 다시 빌드 안함
+              child: Text('Hello'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -72,6 +88,19 @@ class CodeGenerationScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StateFiveWidget extends ConsumerWidget {
+  const _StateFiveWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state5 = ref.watch(gStateNotifierProvider);
+
+    return Text(
+      'State5: $state5',
     );
   }
 }
