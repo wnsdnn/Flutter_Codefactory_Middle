@@ -1,39 +1,13 @@
-import 'package:actual/common/const/data.dart';
-import 'package:actual/common/dio/dio.dart';
+import 'package:actual/common/model/cursor_pagination_model.dart';
 import 'package:actual/restaurant/component/restaurant_card.dart';
 import 'package:actual/restaurant/model/restaurant_model.dart';
 import 'package:actual/restaurant/repository/restaurant_repository.dart';
 import 'package:actual/restaurant/view/restaurant_detail_screen.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RestaurantScrenn extends ConsumerWidget {
   const RestaurantScrenn({super.key});
-
-  Future<List<RestaurantModel>> paginateRestaurant(WidgetRef ref) async {
-    final dio = ref.watch(dioProvider);
-
-    // final dio = Dio();
-    //
-    // dio.interceptors.add(
-    //   CustomInterceptor(storage: storage),
-    // );
-
-    final response =
-        await RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/').paginate();
-
-    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    //
-    // final response = await dio.get(
-    //   'http://$ip/restaurant',
-    //   options: Options(headers: {
-    //     'authorization': 'Bearer $accessToken',
-    //   }),
-    // );
-
-    return response.data;
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,9 +17,9 @@ class RestaurantScrenn extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: 16.0,
           ),
-          child: FutureBuilder<List<RestaurantModel>>(
-            future: paginateRestaurant(ref),
-            builder: (context, snapshot) {
+          child: FutureBuilder<CursorPagination<RestaurantModel>>(
+            future: ref.watch(restaurantRepositoryProvider).paginate(),
+            builder: (context, AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
               if (snapshot.hasError) {
                 return Center(
                   child: Text("에러가 발생하였습니다."),
@@ -58,13 +32,11 @@ class RestaurantScrenn extends ConsumerWidget {
                 );
               }
 
-              final response = snapshot.data!;
+              final response = snapshot.data!.data;
 
               return ListView.separated(
                 itemBuilder: (context, index) {
                   final pItem = response[index]!;
-                  // parsed item
-                  // final pItem = RestaurantModel.fromJson(item);
 
                   return GestureDetector(
                     onTap: () {
