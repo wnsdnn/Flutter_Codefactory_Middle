@@ -4,6 +4,18 @@ import 'package:actual/restaurant/model/restaurant_model.dart';
 import 'package:actual/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
+final restaurantDetailProvider = Provider.family<RestaurantModel?, String>((ref, id) {
+  final state = ref.watch(restaurantProvider);
+
+  if(state is! CursorPagination<RestaurantModel>) {
+    return null;
+  }
+
+
+  return state.data.firstWhere((element) => element.id == id);
+});
+
 final restaurantProvider =
     StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>(
   (ref) {
