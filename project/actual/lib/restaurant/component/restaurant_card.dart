@@ -66,10 +66,10 @@ class RestaurantCard extends StatelessWidget {
         if(isDetail)
           image,
         if(!isDetail)
-        ClipRRect(
-          child: image,
-          borderRadius: BorderRadius.circular(12.0),
-        ),
+          ClipRRect(
+            child: image,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
         const SizedBox(height: 16.0),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: isDetail ? 16.0 : 0),
@@ -106,7 +106,7 @@ class RestaurantCard extends StatelessWidget {
                       label: '${deliveryFee == 0 ? '무료' : deliveryFee}'),
                 ],
               ),
-              if(isDetail != null && isDetail)
+              if(isDetail != null && isDetail && detail != null)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(detail!),

@@ -33,9 +33,6 @@ class _RestaurantDetailScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(restaurantDetailProvider(widget.id));
 
-    print('=== state ===');
-    print(state);
-
     if (state == null) {
       return DefaultLayout(
         child: Center(

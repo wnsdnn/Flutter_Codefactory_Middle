@@ -48,7 +48,6 @@ class _RootTabState extends State<RootTab> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(tabController.index);
     return DefaultLayout(
       title: '코팩 딜리버리',
       child: Center(
