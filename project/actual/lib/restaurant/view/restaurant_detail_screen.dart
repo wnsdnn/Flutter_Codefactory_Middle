@@ -64,7 +64,7 @@ class _RestaurantDetailScreenState
                 images: [],
                 rating: 4,
                 email: 'jc@codefactory.ai',
-                content: '맛있습니다',
+                content: '맛있습니다.',
               ),
             ),
           ),
