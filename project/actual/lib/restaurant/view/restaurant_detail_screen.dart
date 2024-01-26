@@ -145,6 +145,8 @@ class _RestaurantDetailScreenState
   SliverPadding renderRatings({
     required List<RatingModel> models,
   }) {
+    final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
+
     return SliverPadding(
       padding: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -152,8 +154,22 @@ class _RestaurantDetailScreenState
       ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-          childCount: models.length,
+          childCount: models.length + 1,
           (context, index) {
+            if (index == models.length) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Center(
+                  child: ratingsState is CursorPaginationFetchingMore
+                      ? CircularProgressIndicator()
+                      : Text('마지막 댓글입니다.'),
+                ),
+              );
+            }
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: RatingCard.fromModel(model: models[index]),

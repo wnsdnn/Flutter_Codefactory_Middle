@@ -40,7 +40,6 @@ class PaginationProvider<T extends IModelWithId,
       // 1) hasMorer가 false일때 (기존 상태에서 이미 다음 데이터가 없다는 값을 들고있다면)
       // 2) 로딩중일때 - fatchMore가 true일때
       //  fetchMore가 아닐때 - 새로고침의 의도가 있을수 있다.
-      print('$T / $U / 실행');
       if (state is CursorPagination && !forceRefetch) {
         final pState = state as CursorPagination;
 
@@ -68,10 +67,6 @@ class PaginationProvider<T extends IModelWithId,
       // fetchMore
       // 데이터를 추가로 더 가져오는 상황
       if (fetchMore) {
-        print('=== state ===');
-        print(T);
-        print(state);
-
         final pState = state as CursorPagination<T>;
 
         state = CursorPaginationFetchingMore(
