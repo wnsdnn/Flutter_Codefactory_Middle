@@ -167,6 +167,5 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
           )
           .toList(),
     );
-    //
   }
 }
