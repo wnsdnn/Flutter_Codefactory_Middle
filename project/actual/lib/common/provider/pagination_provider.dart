@@ -4,17 +4,16 @@ import 'package:actual/common/model/pagination_params.dart';
 import 'package:actual/common/repository/base_pagination_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PaginationProvider<
-T extends IModelWithId,
-U extends IBasePaginationRepository<T>
-> extends StateNotifier<CursorPaginationBase> {
+class PaginationProvider<T extends IModelWithId,
+        U extends IBasePaginationRepository<T>>
+    extends StateNotifier<CursorPaginationBase> {
   final U repository;
 
   PaginationProvider({
     required this.repository,
-  }) : super(
-          CursorPaginationLoading(),
-        );
+  }) : super(CursorPaginationLoading()) {
+    paginate();
+  }
 
   Future<void> paginate({
     int fetchCount = 20,
@@ -38,9 +37,10 @@ U extends IBasePaginationRepository<T>
       // 5) CursorPaginationFetchMore - 추가 데이터를 paginate 해오라는 요청을 받았을때
 
       // 바로 반환하는 상황
-      // 1) hasMorer가 false일때 (기존 상태에서 이미 다음 데이터가 없다는 값을 들고있따면)
+      // 1) hasMorer가 false일때 (기존 상태에서 이미 다음 데이터가 없다는 값을 들고있다면)
       // 2) 로딩중일때 - fatchMore가 true일때
       //  fetchMore가 아닐때 - 새로고침의 의도가 있을수 있다.
+      print('$T / $U / 실행');
       if (state is CursorPagination && !forceRefetch) {
         final pState = state as CursorPagination;
 
@@ -68,6 +68,10 @@ U extends IBasePaginationRepository<T>
       // fetchMore
       // 데이터를 추가로 더 가져오는 상황
       if (fetchMore) {
+        print('=== state ===');
+        print(T);
+        print(state);
+
         final pState = state as CursorPagination<T>;
 
         state = CursorPaginationFetchingMore(
@@ -117,7 +121,10 @@ U extends IBasePaginationRepository<T>
       } else {
         state = resp;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print('=== error ===');
+      print(e);
+      print(stack);
       state = CursorPaginationError(
         message: '데이터를 가져오지 못했습니다.',
       );
