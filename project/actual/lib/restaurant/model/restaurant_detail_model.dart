@@ -66,6 +66,9 @@ class RestaurantProductModel {
 
   final String id;
   final String name;
+  @JsonKey(
+    fromJson: DataUtils.pathToUrl,
+  )
   final String imgUrl;
   final String detail;
   final int price;
@@ -73,9 +76,6 @@ class RestaurantProductModel {
   RestaurantProductModel({
     required this.id,
     required this.name,
-    @JsonKey(
-      fromJson: DataUtils.pathToUrl,
-    )
     required this.imgUrl,
     required this.detail,
     required this.price,
