@@ -11,8 +11,10 @@ typedef PaginationWidgetBuilder<T extends IModelWithId> = Widget Function(
 
 class PaginationListView<T extends IModelWithId>
     extends ConsumerStatefulWidget {
+  // 페이지에 맞는 provider 받기
   final StateNotifierProvider<PaginationProvider, CursorPaginationBase>
       provider;
+  // List에 보여줄 Item을 받는 빌더
   final PaginationWidgetBuilder<T> itemBuilder;
 
   const PaginationListView({
