@@ -5,6 +5,7 @@ import 'package:go_router_v7_actual/screens/3_push_screen.dart';
 import 'package:go_router_v7_actual/screens/4_pop_base_screen.dart';
 import 'package:go_router_v7_actual/screens/5_pop_return_screen.dart';
 import 'package:go_router_v7_actual/screens/6_path_param_screen.dart';
+import 'package:go_router_v7_actual/screens/7_query_parameter_screen.dart';
 import 'package:go_router_v7_actual/screens/root_screen.dart';
 
 // https://blog.codefactory.ai -> / -> path
@@ -45,12 +46,15 @@ final router = GoRouter(
           builder: (context, state) => PathParamScreen(),
           routes: [
             GoRoute(
-              path: ':name',
-              builder: (context, state) {
-                return PathParamScreen();
-              }
-            ),
+                path: ':name',
+                builder: (context, state) {
+                  return PathParamScreen();
+                }),
           ],
+        ),
+        GoRoute(
+          path: 'query_param',
+          builder: (context, state) => QueryParameterScreen(),
         ),
       ],
     ),
