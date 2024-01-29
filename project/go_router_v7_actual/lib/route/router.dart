@@ -6,6 +6,8 @@ import 'package:go_router_v7_actual/screens/4_pop_base_screen.dart';
 import 'package:go_router_v7_actual/screens/5_pop_return_screen.dart';
 import 'package:go_router_v7_actual/screens/6_path_param_screen.dart';
 import 'package:go_router_v7_actual/screens/7_query_parameter_screen.dart';
+import 'package:go_router_v7_actual/screens/8_nested_child_screen.dart';
+import 'package:go_router_v7_actual/screens/8_nested_screen.dart';
 import 'package:go_router_v7_actual/screens/root_screen.dart';
 
 // https://blog.codefactory.ai -> / -> path
@@ -55,6 +57,29 @@ final router = GoRouter(
         GoRoute(
           path: 'query_param',
           builder: (context, state) => QueryParameterScreen(),
+        ),
+        ShellRoute(
+          builder: (context, state, child) {
+            // child - ShellRoute의 routes에 넣는 GoRoute 위젯에 builder의 리턴값이 들어옴
+            return NestedScreen(child: child);
+          },
+          routes: [
+            // /nested/a
+            GoRoute(
+              path: 'nested/a',
+              builder: (context, state) => NestedChildScreen(routeName: '/nested/a'),
+            ),
+            // /nested/b
+            GoRoute(
+              path: 'nested/b',
+              builder: (context, state) => NestedChildScreen(routeName: '/nested/b'),
+            ),
+            // /nested/c
+            GoRoute(
+              path: 'nested/c',
+              builder: (context, state) => NestedChildScreen(routeName: '/nested/c'),
+            ),
+          ],
         ),
       ],
     ),
