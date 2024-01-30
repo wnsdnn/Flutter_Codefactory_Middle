@@ -49,7 +49,6 @@ class RestaurantStateNotifier
     }
 
     final pState = state as CursorPagination;
-
     final resp = await repository.getRestaurantDetail(id: id);
 
     // [RestaurantModel(1), RestaurantModel(2), RestaurantModel(3)]
