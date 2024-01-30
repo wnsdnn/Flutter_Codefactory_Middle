@@ -8,11 +8,28 @@ import 'package:go_router_v7_actual/screens/6_path_param_screen.dart';
 import 'package:go_router_v7_actual/screens/7_query_parameter_screen.dart';
 import 'package:go_router_v7_actual/screens/8_nested_child_screen.dart';
 import 'package:go_router_v7_actual/screens/8_nested_screen.dart';
+import 'package:go_router_v7_actual/screens/9_login_screen.dart';
+import 'package:go_router_v7_actual/screens/9_private_screen.dart';
 import 'package:go_router_v7_actual/screens/root_screen.dart';
+
+// 로그인이 됐는지 안됐는지
+// true - login OK / false - login NO
+bool authState = false;
 
 // https://blog.codefactory.ai -> / -> path
 // https://blog.codefactory.ai/flutter -> /flutter
 final router = GoRouter(
+  // 전체 적용
+  redirect: (context, state) {
+    // return String(path) -> 해당 라우트로 이동한다 (path)
+    // return null -> 원래 이동하려던 라우트로 이동한다.
+
+    if(state.location == '/login/private' && !authState) {
+      return '/login';
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -67,17 +84,48 @@ final router = GoRouter(
             // /nested/a
             GoRoute(
               path: 'nested/a',
-              builder: (context, state) => NestedChildScreen(routeName: '/nested/a'),
+              builder: (context, state) =>
+                  NestedChildScreen(routeName: '/nested/a'),
             ),
             // /nested/b
             GoRoute(
               path: 'nested/b',
-              builder: (context, state) => NestedChildScreen(routeName: '/nested/b'),
+              builder: (context, state) =>
+                  NestedChildScreen(routeName: '/nested/b'),
             ),
             // /nested/c
             GoRoute(
               path: 'nested/c',
-              builder: (context, state) => NestedChildScreen(routeName: '/nested/c'),
+              builder: (context, state) =>
+                  NestedChildScreen(routeName: '/nested/c'),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login',
+          builder: (context, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              path: 'private',
+              builder: (context, state) => PrivateScreen(),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login2',
+          builder: (context, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              path: 'private',
+              builder: (context, state) => PrivateScreen(),
+              // 해당 url에 접근했을때만 redirect 실행 (부분 적용)
+              redirect: (context, state) {
+                if(!authState) {
+                  return '/login2';
+                }
+
+                return null;
+              },
             ),
           ],
         ),
