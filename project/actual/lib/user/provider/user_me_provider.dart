@@ -29,4 +29,4 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
 
     state = resp;
   }
-} 
+}

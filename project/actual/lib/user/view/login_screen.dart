@@ -80,13 +80,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     // final rawString = 'test@codefactory.ai:testtest';
                     final rawString = '$username:$password';
 
-                    print(rawString);
-
                     // Codec<매개변수 타입, 리턴타입>
                     // Base64 형태로 바뀌는 코드
                     Codec<String, String> stringToBase64 = utf8.fuse(base64);
                     String token = stringToBase64.encode(rawString);
-                    print(token);
 
                     final response = await dio.post(
                       'http://$ip/auth/login',
