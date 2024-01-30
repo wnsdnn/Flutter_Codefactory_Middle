@@ -168,4 +168,6 @@ final router = GoRouter(
     ),
   ],
   errorBuilder: (context, state) => ErrorScreen(error: state.error.toString()),
+  // Log를 찍을건지 결정할수 있음
+  debugLogDiagnostics: true,
 );
