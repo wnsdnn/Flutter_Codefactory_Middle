@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_router_v7_actual/screens/10_transition_screen_1.dart';
+import 'package:go_router_v7_actual/screens/10_transition_screen_2.dart';
 import 'package:go_router_v7_actual/screens/1_basic_scree.dart';
 import 'package:go_router_v7_actual/screens/2_named_screen.dart';
 import 'package:go_router_v7_actual/screens/3_push_screen.dart';
@@ -24,7 +27,7 @@ final router = GoRouter(
     // return String(path) -> 해당 라우트로 이동한다 (path)
     // return null -> 원래 이동하려던 라우트로 이동한다.
 
-    if(state.location == '/login/private' && !authState) {
+    if (state.location == '/login/private' && !authState) {
       return '/login';
     }
 
@@ -120,12 +123,43 @@ final router = GoRouter(
               builder: (context, state) => PrivateScreen(),
               // 해당 url에 접근했을때만 redirect 실행 (부분 적용)
               redirect: (context, state) {
-                if(!authState) {
+                if (!authState) {
                   return '/login2';
                 }
 
                 return null;
               },
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'transition',
+          builder: (context, state) => TransitionScreenOne(),
+          routes: [
+            GoRoute(
+              path: 'detail',
+              pageBuilder: (context, state) => CustomTransitionPage(
+                // 시간 조절 가능
+                transitionDuration: Duration(seconds: 3),
+                reverseTransitionDuration: Duration(seconds: 3),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  // animation - 0 ~ 1까지로 자동 증가
+                  // secondaryAnimation - 1 ~ 0까지 감소 (animation과 반대, 되돌아올때)
+                  return RotationTransition(
+                    turns: animation,
+                    child: child,
+                  );
+                  return ScaleTransition(
+                    scale: animation,
+                    child: child,
+                  );return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+                child: TransitionScreenTwo(),
+              ),
             ),
           ],
         ),
