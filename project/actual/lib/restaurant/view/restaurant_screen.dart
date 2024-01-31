@@ -3,6 +3,7 @@ import 'package:actual/restaurant/component/restaurant_card.dart';
 import 'package:actual/restaurant/provider/restaurant_provider.dart';
 import 'package:actual/restaurant/view/restaurant_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RestaurantScrenn extends StatelessWidget {
   @override
@@ -12,14 +13,13 @@ class RestaurantScrenn extends StatelessWidget {
       itemBuilder: <RestaurantModel>(_, index, model) {
         return GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return RestaurantDetailScreen(
-                    id: model.id,
-                  );
-                },
-              ),
+            // goNamed에서 path 파라미터 넘기는 방법
+            // context.go('/restaurant/${model.id}');
+            context.goNamed(
+              RestaurantDetailScreen.reouteName,
+              pathParameters: {
+                'rid': model.id,
+              },
             );
           },
           child: RestaurantCard.fromModel(
