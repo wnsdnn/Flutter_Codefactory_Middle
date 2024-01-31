@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:actual/common/component/custom_text_form_field.dart';
 import 'package:actual/common/const/colors.dart';
-import 'package:actual/common/const/data.dart';
 import 'package:actual/common/layout/default_layout.dart';
-import 'package:actual/common/secure_storage/secure_storage.dart';
-import 'package:actual/common/view/root_tab.dart';
+import 'package:actual/user/model/user_model.dart';
+import 'package:actual/user/provider/user_me_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,9 +22,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dio = Dio();
-
     final logoWidth = (MediaQuery.of(context).size.width / 3) * 2;
+    final state = ref.watch(userMeProvider);
 
     return DefaultLayout(
       child: SingleChildScrollView(
@@ -76,39 +72,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () async {
-                    // id:pwd
-                    // final rawString = 'test@codefactory.ai:testtest';
-                    final rawString = '$username:$password';
-
-                    // Codec<매개변수 타입, 리턴타입>
-                    // Base64 형태로 바뀌는 코드
-                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-                    String token = stringToBase64.encode(rawString);
-
-                    final response = await dio.post(
-                      'http://$ip/auth/login',
-                      options: Options(
-                        headers: {
-                          'authorization': 'Basic $token',
+                  onPressed: state is UserModelLoading
+                      ? null
+                      : () async {
+                          ref.read(userMeProvider.notifier).login(
+                                username: username,
+                                password: password,
+                              );
                         },
-                      ),
-                    );
-
-                    final refreshToken = response.data['refreshToken'];
-                    final accessToken = response.data['accessToken'];
-
-                    final storage = ref.read(secureStorageProvider);
-
-                    storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
-                    storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RootTab(),
-                      ),
-                    );
-                  },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
                     shape: RoundedRectangleBorder(
