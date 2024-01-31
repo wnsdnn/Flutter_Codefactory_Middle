@@ -22,6 +22,8 @@ class TabInfo {
 }
 
 class RootTab extends StatefulWidget {
+  static String get routeName => 'home';
+
   const RootTab({super.key});
 
   @override
