@@ -1,7 +1,9 @@
+import 'package:actual/common/const/colors.dart';
 import 'package:actual/common/layout/default_layout.dart';
 import 'package:actual/common/model/cursor_pagination_model.dart';
 import 'package:actual/common/utils/pagination_utils.dart';
 import 'package:actual/product/component/product_card.dart';
+import 'package:actual/product/model/product_model.dart';
 import 'package:actual/rating/component/rating_card.dart';
 import 'package:actual/rating/model/rating_model.dart';
 import 'package:actual/restaurant/component/restaurant_card.dart';
@@ -9,9 +11,11 @@ import 'package:actual/restaurant/model/restaurant_detail_model.dart';
 import 'package:actual/restaurant/model/restaurant_model.dart';
 import 'package:actual/restaurant/provider/restaurant_provider.dart';
 import 'package:actual/restaurant/provider/restaurant_rating_provider.dart';
+import 'package:actual/user/provider/basket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:badges/badges.dart' as badges;
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   static String get reouteName => 'restaurantDetail';
@@ -54,8 +58,7 @@ class _RestaurantDetailScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(restaurantDetailProvider(widget.id));
     final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
-
-    print(ratingsState);
+    final basket = ref.watch(basketProvider);
 
     if (state == null) {
       return DefaultLayout(
@@ -67,6 +70,27 @@ class _RestaurantDetailScreenState
 
     return DefaultLayout(
       title: '불타는 떡볶이',
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: PRIMARY_COLOR,
+        child: badges.Badge(
+          showBadge: basket.isNotEmpty,
+          badgeContent: Text(
+            basket
+                .fold(0, (previous, next) => previous + next.count)
+                .toString(),
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontSize: 10.0,
+            ),
+          ),
+          badgeColor: Colors.white,
+          child: Icon(
+            Icons.shopping_basket_outlined,
+            color: Colors.white,
+          ),
+        ),
+      ),
       child: CustomScrollView(
         controller: controller,
         slivers: [
@@ -78,6 +102,7 @@ class _RestaurantDetailScreenState
           if (state is RestaurantDetailModel)
             renderProducts(
               products: state.products,
+              restaurant: state,
             ),
           if (ratingsState is CursorPagination<RatingModel>)
             renderRatings(
@@ -123,6 +148,7 @@ class _RestaurantDetailScreenState
 
   SliverPadding renderProducts({
     required List<RestaurantProductModel> products,
+    required RestaurantModel restaurant,
   }) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -132,10 +158,26 @@ class _RestaurantDetailScreenState
           (context, index) {
             final model = products[index];
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ProductCard.fromRestaurantProductModel(
-                model: model,
+            // InkWell - 눌렀을때 스플래쉬 애니메이션이 생김 (눌렀다는 느낌)
+            // tap해도 화면안에 그대로 있는 경우 많이 사용
+            return InkWell(
+              onTap: () {
+                ref.read(basketProvider.notifier).addToBasket(
+                      product: ProductModel(
+                        id: model.id,
+                        name: model.name,
+                        detail: model.detail,
+                        imgUrl: model.imgUrl,
+                        price: model.price,
+                        restaurant: restaurant,
+                      ),
+                    );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ProductCard.fromRestaurantProductModel(
+                  model: model,
+                ),
               ),
             );
           },
