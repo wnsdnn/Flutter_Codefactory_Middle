@@ -16,7 +16,7 @@ class RestaurantScrenn extends StatelessWidget {
             // goNamed에서 path 파라미터 넘기는 방법
             // context.go('/restaurant/${model.id}');
             context.goNamed(
-              RestaurantDetailScreen.reouteName,
+              RestaurantDetailScreen.routeName,
               pathParameters: {
                 'rid': model.id,
               },
