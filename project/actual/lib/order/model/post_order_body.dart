@@ -1,4 +1,3 @@
-import 'package:actual/user/model/basket_item_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'post_order_body.g.dart';
@@ -33,8 +32,8 @@ class PostOrderBodyProduct {
     required this.count,
   });
 
-  factory PostOrderBodyProduct.fromJson(Map<String, dynamic> json) =>
-      _$PostOrderBodyProductFromJson(json);
+  factory PostOrderBodyProduct.fromJson(Map<String, dynamic> json)
+  => _$PostOrderBodyProductFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostOrderBodyProductToJson(this);
 }
