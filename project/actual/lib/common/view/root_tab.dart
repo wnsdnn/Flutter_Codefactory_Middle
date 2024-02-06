@@ -1,5 +1,6 @@
 import 'package:actual/common/const/colors.dart';
 import 'package:actual/common/layout/default_layout.dart';
+import 'package:actual/order/view/order_screen.dart';
 import 'package:actual/product/view/product_screen.dart';
 import 'package:actual/restaurant/view/restaurant_screen.dart';
 import 'package:actual/user/view/profile_screen.dart';
@@ -62,7 +63,7 @@ class _RootTabState extends State<RootTab> with TickerProviderStateMixin {
           children: [
             RestaurantScrenn(),
             ProductScreen(),
-            Center(child: Text('주문')),
+            OrderScreen(),
             ProfileScreen(),
           ],
         ),
