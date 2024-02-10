@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:actual2/common/component/custom_text_form_field.dart';
 import 'package:actual2/common/const/colors.dart';
 import 'package:actual2/common/layout/default_layout.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,6 +12,14 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dio = Dio();
+
+    // loclahost
+    final simulatorIp = '10.0.2.2:3000';
+    final emulatorIp = '192.168.0.2:3000';
+
+    final ip = Platform.isIOS == true ? simulatorIp : emulatorIp;
+
     return DefaultLayout(
       child: SingleChildScrollView(
         // 스크롤바 드래그 시 키보드 비활성화
@@ -15,7 +27,8 @@ class LoginScreen extends StatelessWidget {
         child: SafeArea(
           top: true,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -42,7 +55,25 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    // ID:PASS
+                    final rawString = 'test@codefactory.ai:testtest';
+
+                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+                    String token = stringToBase64.encode(rawString);
+
+                    final resp = await dio.post(
+                      'http://$ip/auth/login',
+                      options: Options(
+                        headers: {
+                          'authorization': 'Basic $token',
+                        },
+                      ),
+                    );
+
+                    print(resp.data);
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
                     shape: RoundedRectangleBorder(
@@ -57,7 +88,20 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNzU3OTk4NCwiZXhwIjoxNzA3NjY2Mzg0fQ.mPCbk7wi6nAP0JkjBOfb1XDLh8rVmbdTnbpeLNDBvVY';
+
+                    final resp = await dio.post(
+                      'http://$ip/auth/token',
+                      options: Options(
+                        headers: {
+                          'authorization': 'Bearer $refreshToken',
+                        },
+                      ),
+                    );
+
+                    print(resp.data);
+                  },
                   style: TextButton.styleFrom(
                     primary: Colors.black,
                     shape: RoundedRectangleBorder(
