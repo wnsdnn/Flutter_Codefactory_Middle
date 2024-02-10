@@ -4,11 +4,20 @@ import 'dart:io';
 import 'package:actual2/common/component/custom_text_form_field.dart';
 import 'package:actual2/common/const/colors.dart';
 import 'package:actual2/common/layout/default_layout.dart';
+import 'package:actual2/common/view/root_tab.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String username = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +54,30 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 8.0),
                 CustomTextFormField(
                   hintText: '이메일을 입력해주세요',
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      username = value;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextFormField(
                   hintText: '비밀번호를 입력해주세요',
                   obscureText: true,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
                     // ID:PASS
-                    final rawString = 'test@codefactory.ai:testtest';
+                    final rawString = '$username:$password';
 
+                    // base64 형식으로 String 값을 바꿔주는 방법
                     Codec<String, String> stringToBase64 = utf8.fuse(base64);
-
                     String token = stringToBase64.encode(rawString);
 
                     final resp = await dio.post(
@@ -72,6 +89,11 @@ class LoginScreen extends StatelessWidget {
                       ),
                     );
 
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RootTab(),
+                      ),
+                    );
                     print(resp.data);
                   },
                   style: ElevatedButton.styleFrom(
@@ -89,7 +111,8 @@ class LoginScreen extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNzU3OTk4NCwiZXhwIjoxNzA3NjY2Mzg0fQ.mPCbk7wi6nAP0JkjBOfb1XDLh8rVmbdTnbpeLNDBvVY';
+                    final refreshToken =
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNzU3OTk4NCwiZXhwIjoxNzA3NjY2Mzg0fQ.mPCbk7wi6nAP0JkjBOfb1XDLh8rVmbdTnbpeLNDBvVY';
 
                     final resp = await dio.post(
                       'http://$ip/auth/token',
