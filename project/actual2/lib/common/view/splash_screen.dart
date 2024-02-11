@@ -27,9 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkToken() async {
     final dio = Dio();
-
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
     await Future.delayed(Duration(seconds: 1));
 
@@ -42,6 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
             }
         ),
       );
+
+      await storage.write(key: ACCESS_TOKEN_KEY, value: resp.data['accessToken']);
 
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
