@@ -28,6 +28,18 @@ class RestaurantCard extends StatelessWidget {
     required this.ratings,
   });
 
+  // factory RestaurantCard.fromModel() {
+  //   RestaurantCard(
+  //     image: image,
+  //     name: name,
+  //     tags: tags,
+  //     ratingsCount: ratingsCount,
+  //     deliveryTime: deliveryTime,
+  //     deliveryFee: deliveryFee,
+  //     ratings: ratings,
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Column(

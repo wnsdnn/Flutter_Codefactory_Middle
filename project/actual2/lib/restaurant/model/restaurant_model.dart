@@ -1,3 +1,5 @@
+import 'package:actual2/common/const/data.dart';
+
 enum RestaurantPriceRange {
   expensive,
   medium,
@@ -15,7 +17,6 @@ class RestaurantModel {
   final int deliveryTime;
   final int deliveryFee;
 
-
   RestaurantModel({
     required this.id,
     required this.name,
@@ -28,5 +29,21 @@ class RestaurantModel {
     required this.deliveryFee,
   });
 
-
+  factory RestaurantModel.fromJson({
+    required Map<String, dynamic> json,
+  }) {
+    return RestaurantModel(
+      id: json['id'],
+      name: json['name'],
+      thumbUrl: 'http://$ip/${json['thumbUrl']}',
+      tags: List<String>.from(json['tags']),
+      priceRange: RestaurantPriceRange.values.firstWhere(
+            (e) => e.name == json['priceRange'],
+      ),
+      ratings: json['ratings'],
+      ratingsCount: json['ratingsCount'],
+      deliveryTime: json['deliveryTime'],
+      deliveryFee: json['deliveryFee'],
+    );
+  }
 }
