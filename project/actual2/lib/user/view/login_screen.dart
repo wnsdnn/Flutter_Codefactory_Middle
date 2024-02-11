@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:actual2/common/component/custom_text_form_field.dart';
 import 'package:actual2/common/const/colors.dart';
+import 'package:actual2/common/const/data.dart';
 import 'package:actual2/common/layout/default_layout.dart';
 import 'package:actual2/common/view/root_tab.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -89,12 +91,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
 
+                    final refreshToken = resp.data['refreshToken'];
+                    final accessToken = resp.data['accessToken'];
+
+                    await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+                    await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => RootTab(),
                       ),
                     );
-                    print(resp.data);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
@@ -110,21 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    final refreshToken =
-                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNzU3OTk4NCwiZXhwIjoxNzA3NjY2Mzg0fQ.mPCbk7wi6nAP0JkjBOfb1XDLh8rVmbdTnbpeLNDBvVY';
-
-                    final resp = await dio.post(
-                      'http://$ip/auth/token',
-                      options: Options(
-                        headers: {
-                          'authorization': 'Bearer $refreshToken',
-                        },
-                      ),
-                    );
-
-                    print(resp.data);
-                  },
+                  onPressed: () async {},
                   style: TextButton.styleFrom(
                     primary: Colors.black,
                     shape: RoundedRectangleBorder(
