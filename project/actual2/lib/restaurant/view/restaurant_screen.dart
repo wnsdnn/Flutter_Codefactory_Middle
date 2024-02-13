@@ -46,7 +46,7 @@ class RestaurantScreen extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final item = snapshot.data![index];
-                final pItem = RestaurantModel.fromJson(json: item); // parsed
+                final pItem = RestaurantModel.fromJson(item); // parsed
 
                 return GestureDetector(
                   onTap: () {
