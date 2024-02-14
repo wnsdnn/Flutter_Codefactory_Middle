@@ -1,4 +1,5 @@
 import 'package:actual2/common/const/data.dart';
+import 'package:actual2/common/dio/dio.dart';
 import 'package:actual2/common/layout/default_layout.dart';
 import 'package:actual2/product/component/product_card.dart';
 import 'package:actual2/restaurant/component/restaurant_card.dart';
@@ -19,6 +20,14 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   Future<RestaurantDetailModel> getRestaurantDetail() async {
     final dio = Dio();
+
+    // Interceptor 추가
+    dio.interceptors.add(
+      CustomeInterceptor(
+        storage: storage,
+      ),
+    );
+
     final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
 
     return repository.getRestaurantDetail(id: id);
