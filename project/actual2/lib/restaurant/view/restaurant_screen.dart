@@ -1,4 +1,5 @@
 import 'package:actual2/common/const/data.dart';
+import 'package:actual2/common/dio/dio.dart';
 import 'package:actual2/restaurant/component/restaurant_card.dart';
 import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:actual2/restaurant/view/restaurant_detail_screen.dart';
@@ -11,6 +12,10 @@ class RestaurantScreen extends StatelessWidget {
   Future<List> paginateRestaurant() async {
     final dio = Dio();
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+
+    dio.interceptors.add(
+      CustomeInterceptor(storage: storage),
+    );
 
     final resp = await dio.get(
       'http://$ip/restaurant',

@@ -1,4 +1,5 @@
 import 'package:actual2/restaurant/model/restaurant_detail_model.dart';
+import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/http.dart';
 
@@ -11,8 +12,11 @@ abstract class RestaurantRepository {
       _RestaurantRepository;
 
   // http://$ip/restaurant/
-  // @GET('/')
-  // paginate();
+  @GET('/')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<List<RestaurantModel>> paginate();
 
   // http://$ip/restaurant/:id
   @GET('/{id}')
