@@ -3,7 +3,7 @@ import 'package:riverpod_test/model/shopping_item_model.dart';
 
 // StateNotifierProvider에는 재너릭을 꼭 써야하는데
 // <사용할 클래스, 해당클래스가 리턴하는 타입> 이렇게 2가지는 꼭 써줘야함
-final shppingListProvider =
+final shoppingListProvider =
     StateNotifierProvider<ShppingListNotifier, List<ShoppingItemModel>>(
   (ref) => ShppingListNotifier(),
 );

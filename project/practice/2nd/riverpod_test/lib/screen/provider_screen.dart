@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_test/layout/default_layout.dart';
-import 'package:riverpod_test/model/shopping_item_model.dart';
+import 'package:riverpod_test/riverpod/provider.dart';
 import 'package:riverpod_test/riverpod/state_notifier_provider.dart';
 
-class StateNotifierProviderScreen extends ConsumerWidget {
-  const StateNotifierProviderScreen({super.key});
+class ProviderScreen extends ConsumerWidget {
+  const ProviderScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<ShoppingItemModel> state = ref.watch(shoppingListProvider);
+    final state = ref.watch(filteredShoppingListProvider);
 
     return DefaultLayout(
-      title: 'StateNotifierProvider',
+      title: 'ProviderScreen',
+      actions: [
+        PopupMenuButton<FilterState>(
+          itemBuilder: (context) {
+            return FilterState.values.map(
+              (e) => PopupMenuItem(
+                value: e,
+                child: Text(e.name),
+              ),
+            ).toList();
+          },
+          onSelected: (value) {
+            ref.read(filterProvider.notifier).update((state) => value);
+          },
+        ),
+      ],
       body: ListView(
         children: state
             .map(
