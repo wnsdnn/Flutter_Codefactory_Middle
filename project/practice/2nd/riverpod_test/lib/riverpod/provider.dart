@@ -4,6 +4,7 @@ import 'package:riverpod_test/riverpod/state_notifier_provider.dart';
 
 final filteredShoppingListProvider = Provider<List<ShoppingItemModel>>(
   (ref) {
+    // 여러개의 Provider를 안에서 선언
     final shppingListState = ref.watch(shoppingListProvider);
     final filterState = ref.watch(filterProvider);
 
