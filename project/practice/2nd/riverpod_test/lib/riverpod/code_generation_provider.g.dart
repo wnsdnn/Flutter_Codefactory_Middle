@@ -60,3 +60,81 @@ final gStateFuture2Provider = FutureProvider<int>(
       : _$gStateFuture2Hash,
 );
 typedef GStateFuture2Ref = FutureProviderRef<int>;
+String _$gStateMultiplyHash() => r'ec5a8efb6ba3e90e29f7a0722867976890c2a634';
+
+/// See also [gStateMultiply].
+class GStateMultiplyProvider extends AutoDisposeProvider<int> {
+  GStateMultiplyProvider({
+    required this.number1,
+    required this.number2,
+  }) : super(
+          (ref) => gStateMultiply(
+            ref,
+            number1: number1,
+            number2: number2,
+          ),
+          from: gStateMultiplyProvider,
+          name: r'gStateMultiplyProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$gStateMultiplyHash,
+        );
+
+  final int number1;
+  final int number2;
+
+  @override
+  bool operator ==(Object other) {
+    return other is GStateMultiplyProvider &&
+        other.number1 == number1 &&
+        other.number2 == number2;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, number1.hashCode);
+    hash = _SystemHash.combine(hash, number2.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+typedef GStateMultiplyRef = AutoDisposeProviderRef<int>;
+
+/// See also [gStateMultiply].
+final gStateMultiplyProvider = GStateMultiplyFamily();
+
+class GStateMultiplyFamily extends Family<int> {
+  GStateMultiplyFamily();
+
+  GStateMultiplyProvider call({
+    required int number1,
+    required int number2,
+  }) {
+    return GStateMultiplyProvider(
+      number1: number1,
+      number2: number2,
+    );
+  }
+
+  @override
+  AutoDisposeProvider<int> getProviderOverride(
+    covariant GStateMultiplyProvider provider,
+  ) {
+    return call(
+      number1: provider.number1,
+      number2: provider.number2,
+    );
+  }
+
+  @override
+  List<ProviderOrFamily>? get allTransitiveDependencies => null;
+
+  @override
+  List<ProviderOrFamily>? get dependencies => null;
+
+  @override
+  String? get name => r'gStateMultiplyProvider';
+}
