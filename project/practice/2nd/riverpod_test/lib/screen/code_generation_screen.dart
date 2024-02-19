@@ -10,12 +10,25 @@ class CodeGenerationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 불러올 Provider는 개발자가 선언한 함수명이 아닌 .g.dart 파일에 생성된 Provider를 가져와야 한다.
     final state1 = ref.watch(gStateProvider);
+    final state2 = ref.watch(gStateFutureProvider);
+    final state3 = ref.watch(gStateFuture2Provider);
 
     return DefaultLayout(
       title: 'CodeGenerationScreen',
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text('State1: $state1'),
+          state2.when(
+            data: (data) => Text('State2: $data'),
+            error: (error, stackTrace) => Text(error.toString()),
+            loading: () => Center(child: CircularProgressIndicator(),),
+          ),
+          state3.when(
+            data: (data) => Text('State2: $data'),
+            error: (error, stackTrace) => Text(error.toString()),
+            loading: () => Center(child: CircularProgressIndicator(),),
+          ),
         ],
       ),
     );
