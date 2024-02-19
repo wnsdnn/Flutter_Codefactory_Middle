@@ -29,6 +29,23 @@ class _SystemHash {
   }
 }
 
+String _$GStateNotifierHash() => r'f5d3562260bad49518ffe5b82e60b7cc1b8655f2';
+
+/// See also [GStateNotifier].
+final gStateNotifierProvider = AutoDisposeNotifierProvider<GStateNotifier, int>(
+  GStateNotifier.new,
+  name: r'gStateNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$GStateNotifierHash,
+);
+typedef GStateNotifierRef = AutoDisposeNotifierProviderRef<int>;
+
+abstract class _$GStateNotifier extends AutoDisposeNotifier<int> {
+  @override
+  int build();
+}
+
 String _$gStateHash() => r'7ccdacb016fab2894413745b936f82987f9f72cf';
 
 /// See also [gState].
