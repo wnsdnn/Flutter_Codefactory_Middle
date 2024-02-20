@@ -3,6 +3,7 @@ import 'package:actual2/common/dio/dio.dart';
 import 'package:actual2/common/model/cursor_pagination_model.dart';
 import 'package:actual2/restaurant/component/restaurant_card.dart';
 import 'package:actual2/restaurant/model/restaurant_model.dart';
+import 'package:actual2/restaurant/provider/restaurant_provider.dart';
 import 'package:actual2/restaurant/repository/restaurant_repository.dart';
 import 'package:actual2/restaurant/view/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
@@ -14,51 +15,41 @@ class RestaurantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: FutureBuilder<CursorPagination<RestaurantModel>>(
-          future: ref.watch(restaurantRepositoryProvider).paginate(),
-          builder: (context, AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(snapshot.error.toString()),
+    // 여기선 datas가 List<RestaurantModel> 값임
+    final datas = ref.watch(restaurantProvider);
+
+    // 빈배열이면 실행
+    if(datas.length == 0) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    // 비어있지 않으면 ListView에서 화면 렌더링
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListView.separated(
+        itemCount: datas.length,
+        itemBuilder: (context, index) {
+          final pItem = datas[index];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => RestaurantDetailScreen(
+                    id: pItem.id,
+                    name: pItem.name,
+                  ),
+                ),
               );
-            }
-
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            final item = snapshot.data!.data;
-
-            return ListView.separated(
-              itemCount: item.length,
-              itemBuilder: (context, index) {
-                final pItem = item[index];
-
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RestaurantDetailScreen(
-                          id: pItem.id,
-                          name: pItem.name,
-                        ),
-                      ),
-                    );
-                  },
-                  child: RestaurantCard.fromModel(model: pItem),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(height: 24.0);
-              },
-            );
-          },
-        ),
+            },
+            child: RestaurantCard.fromModel(model: pItem),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(height: 24.0);
+        },
       ),
     );
   }

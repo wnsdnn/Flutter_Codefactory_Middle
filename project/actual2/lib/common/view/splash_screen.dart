@@ -35,7 +35,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     final storage = ref.read(secureStorageProvider);
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 500));
 
     try {
       final resp = await dio.post(
