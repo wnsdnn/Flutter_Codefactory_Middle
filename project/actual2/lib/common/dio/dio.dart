@@ -1,6 +1,21 @@
 import 'package:actual2/common/const/data.dart';
+import 'package:actual2/common/secure_storage/secure_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio();
+  final storage = ref.watch(secureStorageProvider);
+
+  dio.interceptors.add(
+    CustomeInterceptor(
+      storage: storage,
+    ),
+  );
+
+  return dio;
+});
 
 class CustomeInterceptor extends Interceptor {
   final FlutterSecureStorage storage;
@@ -48,7 +63,8 @@ class CustomeInterceptor extends Interceptor {
   // 정상적인 응답이 왔을떄만 실행
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print('[RES] [${response.requestOptions.method}] ${response.requestOptions.uri}');
+    print(
+        '[RES] [${response.requestOptions.method}] ${response.requestOptions.uri}');
 
     return super.onResponse(response, handler);
   }
@@ -65,7 +81,7 @@ class CustomeInterceptor extends Interceptor {
 
     // refreshToken이 아예 없으면
     // 당연히 에러를 던진다.
-    if(refreshToken == null) {
+    if (refreshToken == null) {
       // 에러 돌려주기
       // 에러를 던질때는 handler.reject를 사용한다.
       handler.reject(err);
@@ -80,7 +96,7 @@ class CustomeInterceptor extends Interceptor {
     // 만약 아래 코드가 맞다면 현재 가지고 있는 refreshToken이 잘못되어있다는 결론이 남
     final isPathRefresh = err.requestOptions.path == '/auth/token';
 
-    if(isStatus401 && !isPathRefresh) {
+    if (isStatus401 && !isPathRefresh) {
       final dio = Dio();
 
       try {
@@ -109,7 +125,7 @@ class CustomeInterceptor extends Interceptor {
 
         // 요청 성공 여부 리턴
         return handler.resolve(response);
-      } on DioError catch(e) {
+      } on DioError catch (e) {
         // 만약 accessToken 값을 다시 발급 받는 경우에 오류가 났다면
         // 해당 refreshToken 값이 잘못되었다는 뜻이다.
         return handler.reject(err);
