@@ -18,20 +18,21 @@ class RestaurantScreen extends ConsumerWidget {
     // 여기선 datas가 List<RestaurantModel> 값임
     final datas = ref.watch(restaurantProvider);
 
-    // 빈배열이면 실행
-    if(datas.length == 0) {
+    if(datas is CursorPaginationLoading) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
 
+    final pItems = datas as CursorPagination;
+
     // 비어있지 않으면 ListView에서 화면 렌더링
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: ListView.separated(
-        itemCount: datas.length,
+        itemCount: pItems.data.length,
         itemBuilder: (context, index) {
-          final pItem = datas[index];
+          final pItem = pItems.data[index];
 
           return GestureDetector(
             onTap: () {

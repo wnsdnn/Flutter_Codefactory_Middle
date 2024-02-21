@@ -3,7 +3,7 @@ import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:actual2/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final restaurantProvider = StateNotifierProvider<RestaurantStateNotifier, List<RestaurantModel>>(
+final restaurantProvider = StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>(
   (ref) {
     final repository = ref.watch(restaurantRepositoryProvider);
 
@@ -13,12 +13,12 @@ final restaurantProvider = StateNotifierProvider<RestaurantStateNotifier, List<R
   },
 );
 
-class RestaurantStateNotifier extends StateNotifier<CursorPagination> {
+class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
   final RestaurantRepository repository;
 
   RestaurantStateNotifier({
     required this.repository,
-  }) : super(CursorPagination(meta: meta, data: data,)) {
+  }) : super(CursorPaginationLoading()) {
     // RestaurantStateNotifier가 생성되자마자 paginate() 함수 실행
     paginate();
   }
@@ -27,6 +27,6 @@ class RestaurantStateNotifier extends StateNotifier<CursorPagination> {
     final resp = await repository.paginate();
 
     // api에서 호출해온 값을 바로 state에 저장
-    state = resp.data;
+    state = resp;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:actual2/common/const/data.dart';
 import 'package:actual2/common/dio/dio.dart';
 import 'package:actual2/common/model/cursor_pagination_model.dart';
+import 'package:actual2/common/model/pagination_params.dart';
 import 'package:actual2/restaurant/model/restaurant_detail_model.dart';
 import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:dio/dio.dart' hide Headers;
@@ -12,7 +13,8 @@ part 'restaurant_repository.g.dart';
 final restaurantRepositoryProvider = Provider<RestaurantRepository>(
   (ref) {
     final dio = ref.watch(dioProvider);
-    final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
+    final repository =
+        RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
 
     return repository;
   },
@@ -29,7 +31,9 @@ abstract class RestaurantRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<RestaurantModel>> paginate();
+  Future<CursorPagination<RestaurantModel>> paginate({
+    @Queries() PaginationParams? paginationParams = const PaginationParams(),
+  });
 
   // http://$ip/restaurant/:id
   @GET('/{id}')
