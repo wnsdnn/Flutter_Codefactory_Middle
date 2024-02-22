@@ -31,9 +31,10 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
     // 현재 위치가 최대 길이보다
     // 조금 덜되는 위치까지 왔다면
     // 새로운 데이터를 추가요청
-    final isScrollLast = controller.offset > controller.position.maxScrollExtent - 300;
+    final isScrollLast =
+        controller.offset > controller.position.maxScrollExtent - 300;
 
-    if(isScrollLast) {
+    if (isScrollLast) {
       ref.read(restaurantProvider.notifier).paginate(
             fetchMore: isScrollLast,
           );
@@ -70,8 +71,22 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: ListView.separated(
         controller: controller,
-        itemCount: pItems.data.length,
+        itemCount: pItems.data.length + 1,
         itemBuilder: (context, index) {
+          if (index == pItems.data.length) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Center(
+                child: pItems is CursorPaginationFetchingMore
+                    ? CircularProgressIndicator()
+                    : Text('마지막 데이터입니다 ㅠㅠ'),
+              ),
+            );
+          }
+
           final pItem = pItems.data[index];
 
           return GestureDetector(
