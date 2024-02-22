@@ -65,7 +65,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
       final isFetchingMore = state is CursorPaginationFetchingMore;
 
       // 2번 반환 상황
-      if (!fetchMore && (isLoading || isRefetching || isFetchingMore)) {
+      if (fetchMore && (isLoading || isRefetching || isFetchingMore)) {
         return;
       }
 

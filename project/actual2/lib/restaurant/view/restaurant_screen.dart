@@ -10,19 +10,58 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RestaurantScreen extends ConsumerWidget {
+class RestaurantScreen extends ConsumerStatefulWidget {
   const RestaurantScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantScreen> createState() => _RestaurantScreenState();
+}
+
+class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
+  final ScrollController controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    // 현재 위치가 최대 길이보다
+    // 조금 덜되는 위치까지 왔다면
+    // 새로운 데이터를 추가요청
+    final isScrollLast = controller.offset > controller.position.maxScrollExtent - 300;
+
+    if(isScrollLast) {
+      ref.read(restaurantProvider.notifier).paginate(
+            fetchMore: isScrollLast,
+          );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // 여기선 datas가 List<RestaurantModel> 값임
     final datas = ref.watch(restaurantProvider);
 
-    if(datas is CursorPaginationLoading) {
+    // 완전 처음 로딩일때
+    if (datas is CursorPaginationLoading) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
+
+    // 에러
+    if (datas is CursorPaginationError) {
+      return Center(
+        child: Text(datas.message),
+      );
+    }
+
+    // CursorPagination
+    // CursorPagiantionFetchingMore
+    // CursorPagiantionRefetching
 
     final pItems = datas as CursorPagination;
 
@@ -30,6 +69,7 @@ class RestaurantScreen extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: ListView.separated(
+        controller: controller,
         itemCount: pItems.data.length,
         itemBuilder: (context, index) {
           final pItem = pItems.data[index];
