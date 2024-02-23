@@ -23,6 +23,9 @@ class RestaurantCard extends StatelessWidget {
   // 상세 내용
   final String? detail;
 
+  // Hero 위젯 태그
+  final String? heroKey;
+
   const RestaurantCard({
     super.key,
     required this.image,
@@ -34,6 +37,7 @@ class RestaurantCard extends StatelessWidget {
     required this.ratings,
     this.isDetail = false,
     this.detail,
+    this.heroKey,
   });
 
   factory RestaurantCard.fromModel({
@@ -45,6 +49,7 @@ class RestaurantCard extends StatelessWidget {
         model.thumbUrl,
         fit: BoxFit.cover,
       ),
+      heroKey: model.id,
       name: model.name,
       tags: model.tags,
       ratingsCount: model.ratingsCount,
@@ -60,11 +65,19 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if(isDetail)
-          image,
-        if(!isDetail)
+        // Hero 위젯 - 화면 이동간의 사이에 같은 위젯이 있다면 화면이동은 좀 더 자연스럽게 해줌
+        if(heroKey != null)
+          Hero(
+            // tag(required) - 사용시 ObjectKey() 함수를 사용해야함
+            tag: ObjectKey(heroKey),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(isDetail ? 0 :12.0),
+              child: image,
+            ),
+          ),
+        if(heroKey == null)
           ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(isDetail ? 0 :12.0),
             child: image,
           ),
         const SizedBox(height: 16.0),
