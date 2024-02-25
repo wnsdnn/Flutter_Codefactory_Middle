@@ -1,4 +1,3 @@
-import 'package:actual2/common/const/data.dart';
 import 'package:actual2/common/utils/data_utils.dart';
 import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:json_annotation/json_annotation.dart';
