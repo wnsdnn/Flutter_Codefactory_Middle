@@ -1,6 +1,6 @@
 import 'package:actual2/common/const/colors.dart';
 import 'package:actual2/common/layout/default_layout.dart';
-import 'package:actual2/product/view/product_tab.dart';
+import 'package:actual2/product/view/product_screen.dart';
 import 'package:actual2/restaurant/view/restaurant_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +47,7 @@ class _RootTabState extends State<RootTab> with TickerProviderStateMixin {
           physics: NeverScrollableScrollPhysics(),
           children: [
             RestaurantScreen(),
-            ProductTab(),
+            ProductScreen(),
             Container(child: Center(child: Text('주문'))),
             Container(child: Center(child: Text('프로필'))),
           ],
