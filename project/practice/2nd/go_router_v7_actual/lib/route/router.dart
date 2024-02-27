@@ -8,7 +8,13 @@ import 'package:go_router_v7_actual/screen/6_path_params_screen.dart';
 import 'package:go_router_v7_actual/screen/7_query_parameter.dart';
 import 'package:go_router_v7_actual/screen/8_child_screen.dart';
 import 'package:go_router_v7_actual/screen/8_nested_screen.dart';
+import 'package:go_router_v7_actual/screen/9_login_screen.dart';
+import 'package:go_router_v7_actual/screen/9_private_screen.dart';
 import 'package:go_router_v7_actual/screen/root_screen.dart';
+
+// 로그인이 됐는지 안됐는지
+// ture - login OK / false - login NO
+bool authState = false;
 
 // http://blog.codefactory.ai -> /
 // https://blog.codefactory.ai/flutter -> /flutter
@@ -16,6 +22,17 @@ import 'package:go_router_v7_actual/screen/root_screen.dart';
 // /basic -> basic screen
 // /named -> named screen
 final router = GoRouter(
+  redirect: (context, state) {
+    // return string - > 해당 라우트로 이동한다 (path)
+    // return null -> 원래 이동하려던 라우트로 이동한다.
+    if(state.location == '/login/private' && !authState) {
+      // location이 '/login/private' 이고 authState가 false면
+      // 다시 '/login'으로 이동
+      return '/login';
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -76,6 +93,36 @@ final router = GoRouter(
               path: 'nested/c',
               builder: (context, state) =>
                   NestedChildScreen(routeName: 'nested/c'),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login',
+          builder: (context, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              path: 'private',
+              builder: (context, state) => PrivateScreen(),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login2',
+          builder: (context, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              path: 'private',
+              builder: (context, state) => PrivateScreen(),
+              // 해당 부분에서만 redirect 적용
+              redirect: (context, state) {
+                // 현재 location이 /login2일때만 실행되므로
+                // authState에 관한 내용만 쓰면됨
+                if(!authState) {
+                  return '/login2';
+                }
+
+                return null;
+              },
             ),
           ],
         ),
