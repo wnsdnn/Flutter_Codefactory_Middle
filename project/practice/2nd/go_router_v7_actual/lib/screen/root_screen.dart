@@ -40,6 +40,12 @@ class RootScreen extends StatelessWidget {
             },
             child: Text('Go Path Params'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              context.go('/query_param');
+            },
+            child: Text('Go Query Parameter'),
+          ),
         ],
       ),
     );
