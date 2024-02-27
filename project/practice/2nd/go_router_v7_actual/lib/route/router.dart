@@ -6,6 +6,8 @@ import 'package:go_router_v7_actual/screen/4_pop_base_screen.dart';
 import 'package:go_router_v7_actual/screen/5_pop_return_screen.dart';
 import 'package:go_router_v7_actual/screen/6_path_params_screen.dart';
 import 'package:go_router_v7_actual/screen/7_query_parameter.dart';
+import 'package:go_router_v7_actual/screen/8_child_screen.dart';
+import 'package:go_router_v7_actual/screen/8_nested_screen.dart';
 import 'package:go_router_v7_actual/screen/root_screen.dart';
 
 // http://blog.codefactory.ai -> /
@@ -55,6 +57,27 @@ final router = GoRouter(
         GoRoute(
           path: 'query_param',
           builder: (context, state) => QueryParameterScreen(),
+        ),
+        ShellRoute(
+          builder: (context, state, child) => NestedScreen(child: child),
+          routes: [
+            // /nested/a -> 이걸로 해석
+            GoRoute(
+              path: 'nested/a',
+              builder: (context, state) =>
+                  NestedChildScreen(routeName: 'nested/a'),
+            ),
+            GoRoute(
+              path: 'nested/b',
+              builder: (context, state) =>
+                  NestedChildScreen(routeName: 'nested/b'),
+            ),
+            GoRoute(
+              path: 'nested/c',
+              builder: (context, state) =>
+                  NestedChildScreen(routeName: 'nested/c'),
+            ),
+          ],
         ),
       ],
     ),
