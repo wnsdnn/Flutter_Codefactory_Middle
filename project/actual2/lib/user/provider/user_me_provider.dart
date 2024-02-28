@@ -22,6 +22,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
 
     // 만약 로그인이 안되어있는 상태일 경우 return
     if(refreshToken == null || accessToken == null) {
+      state = null;
       return;
     }
 
