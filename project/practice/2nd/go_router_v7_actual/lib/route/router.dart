@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_router_v7_actual/screen/10_transition_screen_1.dart';
 import 'package:go_router_v7_actual/screen/10_transition_screen_2.dart';
+import 'package:go_router_v7_actual/screen/11_error_screen.dart';
 import 'package:go_router_v7_actual/screen/1_basic_screen.dart';
 import 'package:go_router_v7_actual/screen/2_named_screen.dart';
 import 'package:go_router_v7_actual/screen/3_push_screen.dart';
@@ -17,8 +18,6 @@ import 'package:go_router_v7_actual/screen/root_screen.dart';
 
 // 로그인이 됐는지 안됐는지
 // ture - login OK / false - login NO
-bool authState = false;
-
 // http://blog.codefactory.ai -> /
 // https://blog.codefactory.ai/flutter -> /flutter
 // / -> home
@@ -36,6 +35,9 @@ final router = GoRouter(
 
     return null;
   },
+  errorBuilder: (context, state) => ErrorScreen(
+    error: state.error.toString(),
+  ),
   routes: [
     GoRoute(
       path: '/',
@@ -163,3 +165,5 @@ final router = GoRouter(
     ),
   ],
 );
+
+bool authState = false;
