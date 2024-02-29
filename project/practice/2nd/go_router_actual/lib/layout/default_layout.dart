@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Widget body;
@@ -10,9 +11,11 @@ class DefaultLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).location;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('test'),
+        title: Text(location.toString()),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
