@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:actual2/common/component/custom_text_form_field.dart';
 import 'package:actual2/common/const/colors.dart';
-import 'package:actual2/common/const/data.dart';
 import 'package:actual2/common/layout/default_layout.dart';
-import 'package:actual2/common/secure_storage/secure_storage.dart';
-import 'package:actual2/common/view/root_tab.dart';
-import 'package:dio/dio.dart';
+import 'package:actual2/user/model/user_model.dart';
+import 'package:actual2/user/provider/user_me_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,7 +21,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dio = Dio();
+    final state = ref.watch(userMeProvider);
 
     return DefaultLayout(
       child: SingleChildScrollView(
@@ -70,37 +66,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () async {
-                    // ID:PASS
-                    final rawString = '$username:$password';
+                  onPressed: state is UserModelLoading
+                      ? null
+                      : () async {
+                          ref.read(userMeProvider.notifier).login(
+                                username: username,
+                                password: password,
+                              );
 
-                    // base64 형식으로 String 값을 바꿔주는 방법
-                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-                    String token = stringToBase64.encode(rawString);
-
-                    final resp = await dio.post(
-                      'http://$ip/auth/login',
-                      options: Options(
-                        headers: {
-                          'authorization': 'Basic $token',
+                          // ID:PASS
+                          // final rawString = '$username:$password';
+                          //
+                          // // base64 형식으로 String 값을 바꿔주는 방법
+                          // Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                          // String token = stringToBase64.encode(rawString);
+                          //
+                          // final resp = await dio.post(
+                          //   'http://$ip/auth/login',
+                          //   options: Options(
+                          //     headers: {
+                          //       'authorization': 'Basic $token',
+                          //     },
+                          //   ),
+                          // );
+                          //
+                          // final refreshToken = resp.data['refreshToken'];
+                          // final accessToken = resp.data['accessToken'];
+                          //
+                          // final storage = ref.read(secureStorageProvider);
+                          //
+                          // await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+                          // await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+                          //
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => RootTab(),
+                          //   ),
+                          // );
                         },
-                      ),
-                    );
-
-                    final refreshToken = resp.data['refreshToken'];
-                    final accessToken = resp.data['accessToken'];
-
-                    final storage = ref.read(secureStorageProvider);
-
-                    await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
-                    await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RootTab(),
-                      ),
-                    );
-                  },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
                     shape: RoundedRectangleBorder(
