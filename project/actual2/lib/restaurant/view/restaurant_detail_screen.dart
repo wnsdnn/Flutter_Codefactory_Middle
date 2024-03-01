@@ -1,7 +1,9 @@
+import 'package:actual2/common/const/colors.dart';
 import 'package:actual2/common/layout/default_layout.dart';
 import 'package:actual2/common/model/cursor_pagination_model.dart';
 import 'package:actual2/common/utils/pagination_utils.dart';
 import 'package:actual2/product/component/product_card.dart';
+import 'package:actual2/product/model/product_model.dart';
 import 'package:actual2/rating/component/rating_card.dart';
 import 'package:actual2/rating/model/rating_model.dart';
 import 'package:actual2/restaurant/component/restaurant_card.dart';
@@ -9,7 +11,9 @@ import 'package:actual2/restaurant/model/restaurant_detail_model.dart';
 import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:actual2/restaurant/provider/restaurant_provider.dart';
 import 'package:actual2/restaurant/provider/restaurant_rating_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:actual2/user/provider/basket_provider.dart';
+import 'package:badges/badges.dart';
+import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
 
@@ -52,6 +56,7 @@ class _RestaurantDetailScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(restaurantDetailProvider(widget.id));
     final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
+    final basket = ref.watch(basketProvider);
 
     if (state == null) {
       return const DefaultLayout(
@@ -63,6 +68,30 @@ class _RestaurantDetailScreenState
 
     return DefaultLayout(
       title: state.name,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: PRIMARY_COLOR,
+        child: Badge(
+          showBadge: basket.isNotEmpty,
+          badgeContent: Text(
+            basket
+                .fold(
+                  0,
+                  (pv, e) => pv + e.count,
+                )
+                .toString(),
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontSize: 10.0,
+            ),
+          ),
+          child: Icon(
+            Icons.shopping_basket_outlined,
+            color: Colors.white,
+          ),
+          badgeColor: Colors.white,
+        ),
+      ),
       child: CustomScrollView(
         controller: controller,
         slivers: [
@@ -73,6 +102,7 @@ class _RestaurantDetailScreenState
           if (state is RestaurantDetailModel) renderLabel(label: '메뉴'),
           if (state is RestaurantDetailModel)
             renderProducts(
+              restaurant: state,
               products: state!.products,
             ),
           if (ratingsState is CursorPagination<RatingModel>)
@@ -156,6 +186,7 @@ class _RestaurantDetailScreenState
   }
 
   SliverPadding renderProducts({
+    required RestaurantModel restaurant,
     required List<RestaurantProductModel> products,
   }) {
     return SliverPadding(
@@ -165,10 +196,24 @@ class _RestaurantDetailScreenState
           (context, index) {
             final model = products[index];
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ProductCard.fromRestaurantProductModel(
-                model: model,
+            return InkWell(
+              onTap: () {
+                ref.read(basketProvider.notifier).addToBasket(
+                      product: ProductModel(
+                        id: model.id,
+                        name: model.name,
+                        detail: model.detail,
+                        imgUrl: model.imgUrl,
+                        price: model.price,
+                        restaurant: restaurant,
+                      ),
+                    );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ProductCard.fromRestaurantProductModel(
+                  model: model,
+                ),
               ),
             );
           },
