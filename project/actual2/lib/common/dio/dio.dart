@@ -1,5 +1,7 @@
 import 'package:actual2/common/const/data.dart';
 import 'package:actual2/common/secure_storage/secure_storage.dart';
+import 'package:actual2/user/provider/auth_provider.dart';
+import 'package:actual2/user/provider/user_me_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,6 +13,7 @@ final dioProvider = Provider<Dio>((ref) {
   dio.interceptors.add(
     CustomeInterceptor(
       storage: storage,
+      ref: ref,
     ),
   );
 
@@ -19,9 +22,11 @@ final dioProvider = Provider<Dio>((ref) {
 
 class CustomeInterceptor extends Interceptor {
   final FlutterSecureStorage storage;
+  final Ref ref;
 
   CustomeInterceptor({
     required this.storage,
+    required this.ref,
   });
 
   // 1) 요청을 보낼때 (요청이 보내지기전)
@@ -128,6 +133,23 @@ class CustomeInterceptor extends Interceptor {
       } on DioError catch (e) {
         // 만약 accessToken 값을 다시 발급 받는 경우에 오류가 났다면
         // 해당 refreshToken 값이 잘못되었다는 뜻이다.
+
+        // circular dependency error
+        // A, B
+        // A -> B의 친구
+        // B -> A의 친구
+        // 사람: A는 B의 친구구나
+        // 기계: A -> B -> A -> B -> A
+        // 무한 반복
+        //
+        // userMeProvider -> dio -> userMoeProvider -> dio -> userMeProvier 무한 참조
+        // ref.read(userMeProvider.notifier).logout();
+
+        // 해당 dioProvider를 참조하고 있는 userMeProvider가 아니라
+        // dioProvider를 참조하고 있지 않는 authProvider에 logout 함수를
+        // 만들어서 해당 클래스를 호출 (우회작업)
+        ref.read(authProvider.notifier).logout();
+
         return handler.reject(err);
       }
     }
