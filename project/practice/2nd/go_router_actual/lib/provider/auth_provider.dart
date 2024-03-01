@@ -15,7 +15,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/login',
     errorBuilder: (context, state) => ErrorScreen(
       error: state.error.toString(),
     ),
