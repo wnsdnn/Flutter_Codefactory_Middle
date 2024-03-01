@@ -27,7 +27,7 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
 
     if (exists) {
       state = state
-          .map((e) => e.product == product.id
+          .map((e) => e.product.id == product.id
               ? e.copyWith(
                   count: e.count + 1,
                 )
