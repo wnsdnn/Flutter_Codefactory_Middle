@@ -1,5 +1,3 @@
-import 'package:actual2/common/const/data.dart';
-import 'package:actual2/common/dio/dio.dart';
 import 'package:actual2/common/layout/default_layout.dart';
 import 'package:actual2/common/model/cursor_pagination_model.dart';
 import 'package:actual2/common/utils/pagination_utils.dart';
@@ -11,20 +9,18 @@ import 'package:actual2/restaurant/model/restaurant_detail_model.dart';
 import 'package:actual2/restaurant/model/restaurant_model.dart';
 import 'package:actual2/restaurant/provider/restaurant_provider.dart';
 import 'package:actual2/restaurant/provider/restaurant_rating_provider.dart';
-import 'package:actual2/restaurant/repository/restaurant_repository.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'restaurantDetail';
+
   final String id;
-  final String name;
 
   const RestaurantDetailScreen({
     super.key,
     required this.id,
-    required this.name,
   });
 
   @override
@@ -66,7 +62,7 @@ class _RestaurantDetailScreenState
     }
 
     return DefaultLayout(
-      title: widget.name,
+      title: state.name,
       child: CustomScrollView(
         controller: controller,
         slivers: [

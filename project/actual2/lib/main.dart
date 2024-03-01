@@ -1,12 +1,10 @@
 import 'package:actual2/common/provider/go_router.dart';
-import 'package:actual2/common/view/splash_screen.dart';
-import 'package:actual2/user/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: _App(),
     ),
   );
@@ -23,10 +21,6 @@ class _App extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'NotoSans'),
       routerConfig: router,
-      // routerDelegate: router.routerDelegate,
-      // routeInformationParser: router.routeInformationParser,
-      // routeInformationProvider: router.routeInformationProvider,
-      // home: SplashScreen(),
     );
   }
 }
