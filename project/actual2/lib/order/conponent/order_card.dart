@@ -42,10 +42,12 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
           '${orderDate.year}-${orderDate.month.toString().padLeft(2, '0')}-${orderDate.day.toString().padLeft(2, '0')} 주문완료',
         ),
+        const SizedBox(height: 8.0),
         Row(
           children: [
             ClipRRect(
@@ -54,6 +56,7 @@ class OrderCard extends StatelessWidget {
             ),
             const SizedBox(width: 16.0),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
@@ -65,7 +68,8 @@ class OrderCard extends StatelessWidget {
                   '$productsDetail $price원',
                   style: TextStyle(
                     color: BODY_TEXT_COLOR,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15.0,
                   ),
                 )
               ],

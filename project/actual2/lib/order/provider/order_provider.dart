@@ -3,7 +3,6 @@ import 'package:actual2/common/provider/pagination_provider.dart';
 import 'package:actual2/order/model/order_model.dart';
 import 'package:actual2/order/model/post_order_body.dart';
 import 'package:actual2/order/repository/order_repository.dart';
-import 'package:actual2/user/model/basket_item_model.dart';
 import 'package:actual2/user/provider/basket_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
