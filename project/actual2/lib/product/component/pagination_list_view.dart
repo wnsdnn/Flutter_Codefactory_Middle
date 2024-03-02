@@ -25,7 +25,8 @@ class PaginationListView<T extends IModelWithId>
       _PaginationListViewState<T>();
 }
 
-class _PaginationListViewState<T extends IModelWithId> extends ConsumerState<PaginationListView> {
+class _PaginationListViewState<T extends IModelWithId>
+    extends ConsumerState<PaginationListView> {
   final ScrollController controller = ScrollController();
 
   @override
@@ -89,33 +90,45 @@ class _PaginationListViewState<T extends IModelWithId> extends ConsumerState<Pag
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: ListView.separated(
-        controller: controller,
-        itemCount: pState.data.length + 1,
-        itemBuilder: (context, index) {
-          if (index == pState.data.length) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Center(
-                child: pState is CursorPaginationFetchingMore
-                    ? CircularProgressIndicator()
-                    : Text('마지막 데이터입니다 ㅠㅠ'),
-              ),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref.read(widget.provider.notifier).paginate(
+                forceRefetch: true,
+              );
+        },
+        child: ListView.separated(
+          controller: controller,
+          physics: AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          itemCount: pState.data.length + 1,
+          itemBuilder: (context, index) {
+            if (index == pState.data.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Center(
+                  child: pState is CursorPaginationFetchingMore
+                      ? CircularProgressIndicator()
+                      : Text('마지막 데이터입니다 ㅠㅠ'),
+                ),
+              );
+            }
+
+            final pItem = pState.data[index];
+
+            return widget.itemBuilder(
+              context,
+              index,
+              pItem,
             );
-          }
-
-          final pItem = pState.data[index];
-
-          return widget.itemBuilder(
-            context, index, pItem,
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 24.0);
-        },
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 24.0);
+          },
+        ),
       ),
     );
   }
